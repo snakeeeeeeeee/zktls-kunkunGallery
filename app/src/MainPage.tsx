@@ -15,6 +15,9 @@ import LotteryGrid from './LotteryGrid';
 import { monadTestnet, switchToMonadTestnet } from './config';
 import './MainPage.css';
 
+// Import images
+import turntableGif from './assets/turntable.gif';
+
 const { Header, Content } = Layout;
 
 // 创建稳定的配置对象
@@ -132,7 +135,7 @@ function MainPageContent() {
             title="开启 KUNKUN 盲盒"
           >
             <img
-              src="/src/assets/turntable.gif"
+              src={turntableGif}
               alt="抽奖"
               className="turntable-icon"
             />
@@ -143,7 +146,7 @@ function MainPageContent() {
           title={
             <div className="lottery-modal-title">
               <img
-                src="/src/assets/turntable.gif"
+                src={turntableGif}
                 alt="转盘"
                 style={{ width: '20px', height: '20px', marginRight: 8, borderRadius: '50%' }}
               />

@@ -3,6 +3,16 @@ import { Card, Row, Col, Tag, Typography, Space, Tooltip } from 'antd';
 import { EyeOutlined, HeartOutlined } from '@ant-design/icons';
 import './NFTGallery.css';
 
+// Import images
+import img1 from './assets/1.jpeg';
+import img2 from './assets/2.jpeg';
+import img3 from './assets/3.jpeg';
+import img4 from './assets/4.jpeg';
+import img5 from './assets/5.jpeg';
+import img6 from './assets/6.jpeg';
+import img7 from './assets/7.jpeg';
+import img8 from './assets/8.jpeg';
+
 const { Meta } = Card;
 const { Text } = Typography;
 
@@ -21,7 +31,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 1,
       name: 'KUNKUN #1',
-      image: '/src/assets/1.jpeg',
+      image: img1,
       tokenId: '#1',
       rarity: 'Legendary',
       likes: 156,
@@ -30,7 +40,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 2,
       name: 'KUNKUN #2',
-      image: '/src/assets/2.jpeg',
+      image: img2,
       tokenId: '#2',
       rarity: 'Epic',
       likes: 89,
@@ -39,7 +49,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 3,
       name: 'KUNKUN #3',
-      image: '/src/assets/3.jpeg',
+      image: img3,
       tokenId: '#3',
       rarity: 'Rare',
       likes: 67,
@@ -48,7 +58,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 4,
       name: 'KUNKUN #4',
-      image: '/src/assets/4.jpeg',
+      image: img4,
       tokenId: '#4',
       rarity: 'Common',
       likes: 45,
@@ -57,7 +67,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 5,
       name: 'KUNKUN #5',
-      image: '/src/assets/5.jpeg',
+      image: img5,
       tokenId: '#5',
       rarity: 'Legendary',
       likes: 203,
@@ -66,7 +76,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 6,
       name: 'KUNKUN #6',
-      image: '/src/assets/6.jpeg',
+      image: img6,
       tokenId: '#6',
       rarity: 'Rare',
       likes: 78,
@@ -75,7 +85,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 7,
       name: 'KUNKUN #7',
-      image: '/src/assets/7.jpeg',
+      image: img7,
       tokenId: '#7',
       rarity: 'Rare',
       likes: 78,
@@ -84,7 +94,7 @@ const NFTGallery: React.FC = () => {
     {
       id: 8,
       name: 'KUNKUN #8',
-      image: '/src/assets/8.jpeg',
+      image: img8,
       tokenId: '#8',
       rarity: 'Rare',
       likes: 78,
