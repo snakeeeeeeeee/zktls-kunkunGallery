@@ -14,6 +14,22 @@ cd contract
 forge install
 ```
 
+3. 构建
+```shell
+forge build
+```
+
+4. 更新ABI
+```shell
+cat out/NFTClaim.sol/NFTClaim.json | jq '.abi' > ../app/contracts/NFTClaim.abi.json
+```
+
+5. 部署合约后更新config.ts中的合约地址
+```text
+CONTRACT_ADDRESS=xxx
+```
+
+
 ## 部署步骤
 
 ### 1. 基本部署（使用默认参数）
@@ -22,10 +38,8 @@ forge install
 ```bash
 forge script script/DeployClaimNFT.s.sol:DeployClaimNFTScript \
     --rpc-url monad_testnet \
-    --account <your-account-name> \
-    --sender <your-address> \
-    --broadcast \
-    --verify
+    --private-key ${privateKey} \
+    --broadcast
 ```
 
 默认参数：
