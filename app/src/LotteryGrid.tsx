@@ -14,6 +14,7 @@ import img5 from './assets/5.jpeg';
 import img6 from './assets/6.jpeg';
 import img7 from './assets/7.jpeg';
 import img8 from './assets/8.jpeg';
+import lotteryGif from './assets/lottery.gif';
 
 const { Title, Text } = Typography;
 
@@ -225,14 +226,14 @@ const LotteryGrid: React.FC = () => {
           >
             {isDrawing ? (
               <img 
-                src="/src/assets/lottery.gif" 
+                src={lotteryGif} 
                 alt="抽奖中" 
                 className="lottery-button-icon-drawing"
               />
             ) : (
               <>
                 <img 
-                  src="/src/assets/lottery.gif" 
+                  src={lotteryGif} 
                   alt="抽奖" 
                   className="lottery-button-icon"
                 />
