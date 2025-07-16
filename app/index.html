@@ -5,6 +5,40 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KUNKUN Gallery</title>
+    
+    <!-- 强制使用 OKX 钱包，避免多钱包冲突 -->
+    <script>
+      // 在页面加载最早阶段处理钱包冲突
+      (function() {
+        let checkCount = 0;
+        const maxChecks = 50; // 最多检查 5 秒
+        
+        function forceOkxWallet() {
+          checkCount++;
+          
+          // 如果找到 OKX 钱包，立即设置为默认提供者
+          if (window.okxwallet && window.okxwallet.ethereum) {
+            window.ethereum = window.okxwallet.ethereum;
+            console.log('✅ 已强制设置 OKX 钱包为默认提供者');
+            return;
+          }
+          
+          // 如果还没找到且未超过最大检查次数，继续检查
+          if (checkCount < maxChecks) {
+            setTimeout(forceOkxWallet, 100);
+          } else {
+            console.warn('⚠️ 未检测到 OKX 钱包，请确保已安装 OKX 钱包扩展');
+          }
+        }
+        
+        // 页面加载后立即开始检查
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', forceOkxWallet);
+        } else {
+          forceOkxWallet();
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

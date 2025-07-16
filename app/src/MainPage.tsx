@@ -30,6 +30,20 @@ const queryClient = new QueryClient({
   },
 });
 
+// 在应用启动时强制设置 OKX 钱包为默认提供者
+const initializeOkxWallet = () => {
+  if (typeof window !== 'undefined') {
+    // 如果存在 OKX 钱包，将其设置为默认的 ethereum 提供者
+    if ((window as any).okxwallet?.ethereum) {
+      (window as any).ethereum = (window as any).okxwallet.ethereum;
+      console.log('已强制设置 OKX 钱包为默认提供者');
+    }
+  }
+};
+
+// 立即执行初始化
+initializeOkxWallet();
+
 const wagmiConfig = createConfig({
   chains: [monadTestnet],
   transports: {
@@ -171,7 +185,10 @@ function MainPageContent() {
 function MainPage() {
   // 只使用 OKX 钱包，避免多钱包选择冲突
   const wallets = useMemo(() => [
-    OkxWallet(),
+    OkxWallet({
+      // 强制使用 OKX 钱包，不检测其他钱包
+      group: 'Popular',
+    }),
   ], []);
 
   return (
