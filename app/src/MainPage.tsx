@@ -169,10 +169,9 @@ function MainPageContent() {
 }
 
 function MainPage() {
-  // 使用useMemo缓存wallets配置，OKX优先
+  // 只使用 OKX 钱包，避免多钱包选择冲突
   const wallets = useMemo(() => [
     OkxWallet(),
-    MetaMask(),
   ], []);
 
   return (
@@ -180,7 +179,7 @@ function MainPage() {
       <WagmiWeb3ConfigProvider
         config={wagmiConfig}
         eip6963={{
-          autoAddInjectedWallets: true,
+          autoAddInjectedWallets: false,
         }}
         chains={[monadTestnet]}
         transports={{
