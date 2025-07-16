@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, Modal, Typography, Card, message } from 'antd';
 import { GiftOutlined } from '@ant-design/icons';
-import { useAccount } from "@ant-design/web3";
+import { useAccount } from 'wagmi';
 import { claimKunkunNFT } from './claim';
 import './LotteryGrid.css';
 
@@ -138,13 +138,13 @@ const LotteryGrid: React.FC = () => {
     
     try {
       // 检查钱包连接状态
-      if (!account?.account?.address) {
+      if (!account?.address) {
         message.error('请先连接钱包再进行验证');
         setIsVerifying(false);
         return;
       }
 
-      const walletAddress = account.account.address;
+      const walletAddress = account.address;
       console.log('当前钱包地址:', walletAddress);
 
       // 动态导入 primusProof

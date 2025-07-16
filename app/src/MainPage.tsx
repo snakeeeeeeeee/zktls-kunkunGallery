@@ -1,19 +1,17 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Layout, Modal, Button, App } from 'antd';
 import { TrophyOutlined } from '@ant-design/icons';
-import { ConnectButton, Connector, useAccount } from "@ant-design/web3";
-import {
-  MetaMask,
-  OkxWallet,
-  WagmiWeb3ConfigProvider
-} from "@ant-design/web3-wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { http, createConfig } from "wagmi";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import NFTGallery from './NFTGallery';
 import LotteryGrid from './LotteryGrid';
-
-import { monadTestnet, switchToMonadTestnet } from './config';
+import { config } from './wagmi';
+import { switchToMonadTestnet } from './config';
 import './MainPage.css';
+import '@rainbow-me/rainbowkit/styles.css';
 
 // Import images
 import turntableGif from './assets/turntable.gif';
@@ -30,26 +28,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// 在应用启动时强制设置 OKX 钱包为默认提供者
-const initializeOkxWallet = () => {
-  if (typeof window !== 'undefined') {
-    // 如果存在 OKX 钱包，将其设置为默认的 ethereum 提供者
-    if ((window as any).okxwallet?.ethereum) {
-      (window as any).ethereum = (window as any).okxwallet.ethereum;
-      console.log('已强制设置 OKX 钱包为默认提供者');
-    }
-  }
-};
-
-// 立即执行初始化
-initializeOkxWallet();
-
-const wagmiConfig = createConfig({
-  chains: [monadTestnet],
-  transports: {
-    [monadTestnet.id]: http(),
-  },
-});
+// RainbowKit 会自动处理钱包管理，不需要手动初始化
 
 function MainPageContent() {
   const [lotteryVisible, setLotteryVisible] = useState(false);
@@ -59,7 +38,7 @@ function MainPageContent() {
   // 监听钱包连接状态，自动切换网络
   useEffect(() => {
     const handleWalletConnection = async () => {
-      if (account?.account?.status === 'connected') {
+      if (account?.status === 'connected') {
         console.log('钱包已连接，开始切换到 Monad 测试网...');
         try {
           const switched = await switchToMonadTestnet();
@@ -76,17 +55,17 @@ function MainPageContent() {
     };
 
     handleWalletConnection();
-  }, [account?.account?.status]);
+  }, [account?.status]);
 
   // 使用useCallback避免重复渲染
   const handleLotteryClick = useCallback(() => {
     console.log('抽奖按钮被点击');
     console.log('完整账户信息:', account);
-    console.log('钱包连接状态:', account?.account?.status === 'connected');
-    console.log('钱包地址:', account?.account?.address);
-    console.log('连接状态:', account?.account?.status);
+    console.log('钱包连接状态:', account?.status === 'connected');
+    console.log('钱包地址:', account?.address);
+    console.log('连接状态:', account?.status);
 
-    if (!account?.account) {
+    if (account?.status !== 'connected') {
       console.log('钱包未连接，显示提示');
       message.warning('🔗 请先连接钱包才能开启 KUNKUN 盲盒');
       return;
@@ -110,20 +89,7 @@ function MainPageContent() {
           </div>
 
           <div className="wallet-section">
-            <Connector
-              modalProps={{
-                mode: 'simple',
-              }}
-            >
-              <ConnectButton
-                quickConnect
-                style={{
-                  borderRadius: '8px',
-                  height: '40px',
-                  fontWeight: '500'
-                }}
-              />
-            </Connector>
+            <ConnectButton />
           </div>
         </div>
       </Header>
@@ -183,33 +149,16 @@ function MainPageContent() {
 }
 
 function MainPage() {
-  // 只使用 OKX 钱包，避免多钱包选择冲突
-  const wallets = useMemo(() => [
-    OkxWallet({
-      // 强制使用 OKX 钱包，不检测其他钱包
-      group: 'Popular',
-    }),
-  ], []);
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiWeb3ConfigProvider
-        config={wagmiConfig}
-        eip6963={{
-          autoAddInjectedWallets: false,
-        }}
-        chains={[monadTestnet]}
-        transports={{
-          [monadTestnet.id]: http(),
-        }}
-        wallets={wallets}
-        queryClient={queryClient}
-      >
-        <App>
-          <MainPageContent />
-        </App>
-      </WagmiWeb3ConfigProvider>
-    </QueryClientProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          <App>
+            <MainPageContent />
+          </App>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 
