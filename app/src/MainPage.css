@@ -1,0 +1,256 @@
+.main-layout {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.main-header {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  line-height: 64px;
+  padding: 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1890ff;
+}
+
+.logo-text {
+  color: #262626;
+  font-size: 18px;
+}
+
+.wallet-section {
+  display: flex;
+  align-items: center;
+}
+
+.main-content {
+  background: transparent;
+  padding: 0;
+  min-height: calc(100vh - 64px); /* 减去头部高度后充满剩余空间 */
+  position: relative; /* 为悬浮元素提供定位基准 */
+}
+
+/* 移除悬浮钱包连接按钮样式 */
+
+.lottery-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.lottery-modal .ant-modal-header {
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  border-bottom: none;
+  padding: 20px 24px;
+}
+
+.lottery-modal .ant-modal-title {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.lottery-modal-title {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.lottery-modal .ant-modal-body {
+  padding: 0;
+}
+
+.lottery-modal .ant-modal-close {
+  color: white;
+}
+
+.lottery-modal .ant-modal-close:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 悬浮抽奖按钮组样式保持不变 */
+.floating-lottery-group {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 抽奖按钮 */
+.floating-lottery-btn {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.4);
+  transition: all 0.3s ease;
+  animation: floatBounce 2s infinite ease-in-out;
+}
+
+.floating-lottery-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(24, 144, 255, 0.6);
+}
+
+/* 浮动动画 */
+@keyframes floatBounce {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* 动态提示语 */
+.lottery-tooltip {
+  position: relative;
+  background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+  animation: tooltipPulse 3s infinite ease-in-out;
+  transform-origin: right center;
+}
+
+.tooltip-text {
+  display: inline-block;
+  animation: textShine 2s infinite linear;
+  background: linear-gradient(45deg, #fff, #ffeb3b, #fff);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: none;
+}
+
+@keyframes textShine {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 提示语呼吸动画 */
+@keyframes tooltipPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* 提示语箭头 */
+.tooltip-arrow {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid #ff6b6b;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 16px;
+  }
+  
+  .logo {
+    gap: 8px;
+  }
+  
+  .logo-text {
+    font-size: 16px;
+  }
+  
+  .main-header {
+    height: 56px;
+    line-height: 56px;
+  }
+  
+  .main-content {
+    min-height: calc(100vh - 56px);
+  }
+  
+  .floating-lottery-group {
+    right: 16px;
+    bottom: 16px;
+    gap: 12px;
+  }
+  
+  .floating-lottery-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .lottery-tooltip {
+    padding: 10px 14px;
+    font-size: 12px;
+    border-radius: 16px;
+  }
+  
+  .tooltip-arrow {
+    right: -6px;
+    border-left-width: 6px;
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logo .anticon {
+    font-size: 20px;
+  }
+  
+  .logo-text {
+    font-size: 14px;
+  }
+  
+  .lottery-modal {
+    margin: 16px;
+  }
+  
+  .lottery-tooltip {
+    padding: 8px 12px;
+    font-size: 11px;
+    max-width: 120px;
+    white-space: normal;
+    text-align: center;
+  }
+}

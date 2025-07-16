@@ -1,0 +1,402 @@
+.lottery-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.lottery-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: none;
+}
+
+.lottery-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.lottery-title {
+  color: #1890ff;
+  margin-bottom: 8px !important;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.lottery-subtitle {
+  color: #666;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.draw-count {
+  color: #999;
+  font-size: 14px;
+  background: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.lottery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 30px;
+  background: linear-gradient(45deg, #ffd700, #ffed4a);
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lottery-grid-item {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  padding: 2px; /* 进一步减少内边距 */
+}
+
+.lottery-grid-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.lottery-grid-item.active {
+  background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+  animation: pulse 0.6s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.prize-item {
+  padding: 2px; /* 奖品项目的内边距也减少 */
+}
+
+.prize-image {
+  font-size: 36px;
+  margin-bottom: 4px; /* 减少底部间距 */
+  animation: bounce 2s infinite;
+  width: 100%;
+  flex: 1; /* 让图片区域占据更多空间 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prize-img {
+  width: calc(100% - 8px); /* 宽度几乎填满容器 */
+  height: calc(100% - 8px); /* 高度几乎填满容器 */
+  max-width: 80px; /* 设置最大尺寸避免过大 */
+  max-height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+.prize-name {
+  font-size: 10px; /* 缩小文字 */
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+  color: #333;
+  height: 20px; /* 固定文字区域高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lottery-grid-item.active .prize-name {
+  color: white;
+  font-weight: bold;
+}
+
+.center-item {
+  background: linear-gradient(135deg, #1890ff, #096dd9);
+  border: 3px solid #ffd700;
+}
+
+.center-item.drawing {
+  animation: rotate 1s linear infinite;
+  background: linear-gradient(135deg, #52c41a, #389e0d);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lottery-button {
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  height: auto;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: transparent;
+  color: white;
+}
+
+.lottery-button:hover,
+.lottery-button:focus {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.lottery-tips {
+  text-align: center;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #1890ff;
+}
+
+.result-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.result-modal-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.result-content {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.result-image {
+  font-size: 80px;
+  margin-bottom: 16px;
+  animation: zoomIn 0.6s ease-out;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.result-name {
+  color: #1890ff;
+  margin-bottom: 12px !important;
+  font-size: 24px;
+}
+
+.result-description {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.result-stats {
+  background: #f0f0f0;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* Twitter验证弹窗样式 */
+.verification-modal .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.verification-modal-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.verification-content {
+  padding: 20px 0;
+}
+
+.verification-info {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 8px;
+  border-left: 4px solid #000;
+}
+
+.twitter-input {
+  margin-bottom: 20px;
+}
+
+.verification-success {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.verification-error {
+  margin-top: 16px;
+  padding: 12px;
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.claim-success {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* 奖品展示区域样式 */
+.prize-display {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fff5f5, #fff0f6);
+  border-radius: 12px;
+  border: 2px solid #ffd6cc;
+}
+
+.prize-display-image {
+  margin-bottom: 12px;
+}
+
+.prize-display-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  animation: prizeGlow 2s infinite alternate;
+}
+
+.prize-display-title {
+  color: #ff4d4f;
+  margin-bottom: 0 !important;
+  font-size: 18px !important;
+}
+
+@keyframes prizeGlow {
+  0% {
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+@media (max-width: 768px) {
+  .lottery-container {
+    padding: 16px;
+  }
+  
+  .lottery-grid {
+    gap: 6px;
+    padding: 12px;
+  }
+  
+  .lottery-grid-item {
+    padding: 1px; /* 移动端更少的内边距 */
+  }
+  
+  .prize-item {
+    padding: 1px;
+  }
+  
+  .prize-image {
+    font-size: 28px;
+    margin-bottom: 2px;
+  }
+  
+  .prize-img {
+    max-width: 60px; /* 移动端最大尺寸 */
+    max-height: 60px;
+  }
+  
+  .prize-name {
+    font-size: 9px; /* 移动端更小的文字 */
+    height: 16px;
+  }
+  
+  .prize-display-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .result-img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .prize-name {
+    font-size: 10px;
+  }
+  
+  .lottery-title {
+    font-size: 24px;
+  }
+}
