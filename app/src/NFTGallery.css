@@ -1,8 +1,8 @@
 .nft-gallery {
-  width: 100%; /* 充满整个宽度 */
-  min-height: 100%; /* 充满整个高度 */
+  width: 100%;
   padding: 20px;
   margin: 0;
+  /* 移除min-height，让内容自然决定高度 */
 }
 
 .gallery-header {

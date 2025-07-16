@@ -64,7 +64,8 @@ const LotteryGrid: React.FC = () => {
   // 获取钱包账户信息
   const account = useAccount();
 
-  const gridPositions = [0, 1, 2, 7, 8, 3, 6, 5, 4];
+  // 转盘位置映射：8个奖品位置（不包括中心位置4）
+  const gridPositions = [0, 1, 2, 3, 5, 6, 7, 8];
 
   const startDraw = () => {
     if (isDrawing) return;
@@ -76,17 +77,26 @@ const LotteryGrid: React.FC = () => {
     const random = Math.random();
     let cumulativeProbability = 0;
     let selectedPrize = prizes[prizes.length - 1]; // 默认最后一个
+    let selectedPrizeIndex = prizes.length - 1;
     
-    for (const prize of prizes) {
+    for (let i = 0; i < prizes.length; i++) {
+      const prize = prizes[i];
       cumulativeProbability += prize.probability;
       if (random <= cumulativeProbability) {
         selectedPrize = prize;
+        selectedPrizeIndex = i;
         break;
       }
     }
     
-    // 计算最终停止位置（对应到九宫格位置）
-    const targetPosition = Math.floor(Math.random() * 8);
+    // 根据奖品索引映射到实际的网格位置
+    // 奖品索引 0,1,2,3,4,5,6,7 对应网格位置 0,1,2,3,5,6,7,8
+    let targetGridPosition;
+    if (selectedPrizeIndex <= 3) {
+      targetGridPosition = selectedPrizeIndex; // 0,1,2,3
+    } else {
+      targetGridPosition = selectedPrizeIndex + 1; // 4,5,6,7 -> 5,6,7,8
+    }
     
     // 动画效果：快速转动3秒
     let animationIndex = 0;
@@ -106,8 +116,8 @@ const LotteryGrid: React.FC = () => {
         }
         setTimeout(animate, speed);
       } else {
-        // 停在目标位置
-        setCurrentIndex(gridPositions[targetPosition]);
+        // 停在目标位置 - 确保停在正确的奖品位置
+        setCurrentIndex(targetGridPosition);
         setTimeout(() => {
           setIsDrawing(false);
           setWinPrize(selectedPrize);
@@ -126,65 +136,64 @@ const LotteryGrid: React.FC = () => {
     setVerificationError(null);
     
     try {
+      // 检查钱包连接状态
+      if (!account?.account?.address) {
+        message.error('请先连接钱包再进行验证');
+        setIsVerifying(false);
+        return;
+      }
+
+      const walletAddress = account.account.address;
+      console.log('当前钱包地址:', walletAddress);
+
       // 动态导入 primusProof
       const { primusProof } = await import('./primus');
       
-      message.info('正在启动X验证，请在弹出的窗口中完成验证...');
+      message.info('正在启动 ZK-TLS 验证，请在弹出的窗口中完成验证...');
       
-      // 使用默认的channel名称或者空字符串
-      await primusProof('', (attestation) => {
-        console.log('验证成功:', attestation);
-        setVerificationResult(attestation);
-        message.success('X验证成功！您已获得KUNKUN NFT资格！');
-      });
+      // 使用用户实际抽到的 NFT ID
+      const selectedNftId = winPrize?.id || 1;
+      
+      await primusProof(
+        walletAddress,
+        (attestation) => {
+          // 验证成功回调
+          console.log('验证成功:', attestation);
+          setVerificationResult(attestation);
+          setIsVerifying(false);
+          message.success('✅ ZK-TLS 验证成功！正在自动领取 NFT...');
+        },
+        (txHash) => {
+          // 领取成功回调
+          console.log('NFT 领取成功！交易哈希:', txHash);
+          setIsClaiming(false);
+          setClaimSuccess(true);
+          setClaimTxHash(txHash);
+          message.success('🎉 KUNKUN NFT 领取成功！');
+        },
+        (error) => {
+          // 错误回调
+          console.error('处理失败:', error);
+          setIsVerifying(false);
+          setIsClaiming(false);
+          setVerificationError(error);
+          message.error('操作失败：' + error.message);
+        },
+        selectedNftId // NFT ID
+      );
       
     } catch (error: any) {
-      console.error('验证失败:', error);
-      setVerificationError(error);
-      message.error('验证失败：' + (error.message || '未知错误'));
-    } finally {
+      console.error('验证过程出错:', error);
       setIsVerifying(false);
+      setVerificationError(error);
+      message.error('验证失败：' + (error.message || '请重试'));
     }
   };
 
+  // 原来的领取函数现在不需要了，因为 primusProof 会自动领取
   const handleClaim = async () => {
-    if (!account?.account?.address) {
-      message.error('请先连接钱包');
-      return;
-    }
-
-    if (!winPrize) {
-      message.error('没有可领取的奖品');
-      return;
-    }
-
-    setIsClaiming(true);
-    
-    try {
-      const result = await claimKunkunNFT(
-        verificationResult,
-        winPrize.id,
-        account.account.address,
-        (txHash) => {
-          // 成功回调
-          setClaimTxHash(txHash);
-          setClaimSuccess(true);
-          console.log('领取成功，交易哈希:', txHash);
-        },
-        (error) => {
-          // 失败回调
-          console.error('领取失败:', error);
-        }
-      );
-
-      if (result.success) {
-        console.log('NFT领取成功');
-      }
-    } catch (error) {
-      console.error('领取过程出错:', error);
-    } finally {
-      setIsClaiming(false);
-    }
+    // 这个函数现在主要用于显示信息，实际领取已经在验证成功后自动完成
+    message.info('NFT 已在验证成功后自动领取！');
   };
 
   const handleCloseVerification = () => {
@@ -211,12 +220,25 @@ const LotteryGrid: React.FC = () => {
             type="primary"
             size="large"
             onClick={startDraw}
-            loading={isDrawing}
             disabled={isDrawing}
             className="lottery-button"
-            icon={<GiftOutlined />}
           >
-            {isDrawing ? '抽奖中...' : '开始抽奖'}
+            {isDrawing ? (
+              <img 
+                src="/src/assets/lottery.gif" 
+                alt="抽奖中" 
+                className="lottery-button-icon-drawing"
+              />
+            ) : (
+              <>
+                <img 
+                  src="/src/assets/lottery.gif" 
+                  alt="抽奖" 
+                  className="lottery-button-icon"
+                />
+                开始抽奖
+              </>
+            )}
           </Button>
         </div>
       );
@@ -250,8 +272,8 @@ const LotteryGrid: React.FC = () => {
       <Modal
         title={
           <div className="verification-modal-title">
-            <XIcon style={{ color: '#000', marginRight: 8, fontSize: '18px' }} />
-            {!verificationResult ? '验证' : claimSuccess ? '领取成功' : '领取 NFT'}
+            <GiftOutlined style={{ color: '#1890ff', marginRight: 8, fontSize: '18px' }} />
+            {!verificationResult ? '领取 KUNKUN NFT' : claimSuccess ? '领取成功' : '正在领取'}
           </div>
         }
         open={verificationVisible}
@@ -260,28 +282,23 @@ const LotteryGrid: React.FC = () => {
           <Button key="cancel" onClick={handleCloseVerification}>
             {claimSuccess ? '关闭' : '取消'}
           </Button>,
-          // 根据验证状态显示不同的按钮
-          !verificationResult ? (
+          // 根据状态显示不同的按钮
+          !verificationResult && !claimSuccess ? (
             <Button 
               key="verify" 
               type="primary" 
               loading={isVerifying}
               onClick={handleVerification}
             >
-              验证 <XIcon style={{ marginLeft: 4 }} />
+              领取 <GiftOutlined style={{ marginLeft: 4 }} />
             </Button>
           ) : claimSuccess ? (
             <Button key="claimed" type="default" disabled>
               已领取 ✅
             </Button>
           ) : (
-            <Button 
-              key="claim" 
-              type="primary" 
-              loading={isClaiming}
-              onClick={handleClaim}
-            >
-              领取 <GiftOutlined style={{ marginLeft: 4 }} />
+            <Button key="processing" type="primary" loading disabled>
+              正在处理...
             </Button>
           )
         ]}
@@ -303,16 +320,16 @@ const LotteryGrid: React.FC = () => {
           <div className="verification-info">
             <Text>
               {!verificationResult ? 
-                '为了领取您的KUNKUN NFT，需要验证您的X账户。' :
+                '为了领取您的KUNKUN NFT，需要验证您的Twitter身份并自动铸造到您的钱包。' :
                 claimSuccess ?
                 '🎉 恭喜！您的KUNKUN NFT已成功领取到钱包中！' :
-                '验证成功！现在可以领取您的KUNKUN NFT了。'
+                '正在处理您的NFT领取请求...'
               }
             </Text>
             <br />
-            {!verificationResult && (
+            {!verificationResult && !claimSuccess && (
               <Text type="secondary">
-                点击"验证"按钮，系统将通过ZK-TLS技术安全验证您的身份。
+                点击"领取"，系统将通过ZK技术安全验证您的Twitter身份并自动领取NFT。
               </Text>
             )}
           </div>
@@ -320,11 +337,11 @@ const LotteryGrid: React.FC = () => {
           {verificationResult && !claimSuccess && (
             <div className="verification-success">
               <Text type="success" strong>
-                ✅ X验证成功！您的KUNKUN NFT资格已确认！
+                ✅ 验证成功！正在自动领取您的KUNKUN...
               </Text>
               <br />
               <Text type="secondary">
-                现在可以点击"领取"按钮来铸造您的NFT到钱包中。
+                请稍候，系统正在自动铸造NFT到您的钱包中。
               </Text>
             </div>
           )}
@@ -332,11 +349,13 @@ const LotteryGrid: React.FC = () => {
           {claimSuccess && (
             <div className="claim-success">
               <Text type="success" strong>
-                🎉 NFT领取成功！
+                🎉 领取成功！
               </Text>
               <br />
+
+              <br />
               <Text type="secondary">
-                交易哈希: {claimTxHash ? claimTxHash.slice(0, 10) + '...' : ''}
+                您可以在钱包中查看您的KUNKUN NFT！
               </Text>
             </div>
           )}
@@ -344,7 +363,7 @@ const LotteryGrid: React.FC = () => {
           {verificationError && (
             <div className="verification-error">
               <Text type="danger">
-                ❌ 验证失败：{verificationError.message || '请重试'}
+                ❌ 操作失败：{verificationError.message || '请重试'}
               </Text>
             </div>
           )}

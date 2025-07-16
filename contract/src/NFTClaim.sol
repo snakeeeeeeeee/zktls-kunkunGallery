@@ -21,7 +21,6 @@ contract NFTClaim is ERC721, Ownable {
     string private _baseURIString;
 
     event NFTClaimed(address indexed user, uint256 nftId, uint256 tokenId, string screenName);
-    event SimpleNFTClaimed(address indexed user, uint256 nftId, uint256 tokenId);
     event PrimusAddressUpdated(address indexed newAddress);
     event BaseURIUpdated(string newBaseURI);
 
@@ -87,21 +86,6 @@ contract NFTClaim is ERC721, Ownable {
         emit NFTClaimed(msg.sender, nftId, tokenId, screenName);
     }
 
-    function simpleClaim(uint256 nftId) external {
-        require(totalClaimed < TOTAL_SUPPLY, "All NFTs have been claimed");
-        require(nftId <= MAX_NFT_ID, "Invalid NFT ID");
-        require(!hasClaimed[msg.sender], "Already claimed");
-
-        hasClaimed[msg.sender] = true;
-
-        uint256 tokenId = totalClaimed;
-        tokenIdToNftId[tokenId] = nftId; // 记录tokenId对应的nftId
-        _safeMint(msg.sender, tokenId);
-        nftIdClaimedCount[nftId]++;
-        totalClaimed++;
-
-        emit SimpleNFTClaimed(msg.sender, nftId, tokenId);
-    }
 
     function uint2str(uint256 _i) internal pure returns (string memory) {
         if (_i == 0) {

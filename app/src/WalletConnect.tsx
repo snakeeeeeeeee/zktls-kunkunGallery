@@ -6,9 +6,9 @@ import {
   OkxWallet, 
   WagmiWeb3ConfigProvider 
 } from "@ant-design/web3-wagmi";
-import { mainnet } from 'viem/chains';
 import { QueryClient } from "@tanstack/react-query";
 import { http } from "wagmi";
+import { monadTestnet } from './config';
 import "./WalletConnect.css";
 
 const { Header } = Layout;
@@ -21,14 +21,14 @@ function WalletConnector() {
     const checkAvailableWallets = () => {
       const wallets = [];
       
+      // 检查 OKX (优先)
+      if (typeof window !== 'undefined' && window.okxwallet) {
+        wallets.push('OKX');
+      }
+      
       // 检查 MetaMask
       if (typeof window !== 'undefined' && window.ethereum?.isMetaMask) {
         wallets.push('MetaMask');
-      }
-      
-      // 检查 OKX
-      if (typeof window !== 'undefined' && window.okxwallet) {
-        wallets.push('OKX');
       }
       
       // 检查其他注入的钱包
@@ -37,6 +37,7 @@ function WalletConnector() {
       }
       
       console.log('检测到的钱包:', wallets);
+      console.log('推荐使用 OKX 钱包连接 Monad 测试网');
     };
     
     checkAvailableWallets();
@@ -71,9 +72,9 @@ function WalletConnect() {
       eip6963={{
         autoAddInjectedWallets: true,
       }}
-      chains={[mainnet]}
+      chains={[monadTestnet]}
       transports={{
-        [mainnet.id]: http(),
+        [monadTestnet.id]: http(),
       }}
       wallets={[
         OkxWallet(),

@@ -9,7 +9,8 @@ optimizer_runs = 200
 # Remappings
 remappings = [
     "@primuslabs/zktls-contracts/=lib/zktls-contracts/",
-    "@openzeppelin/=lib/zktls-contracts/lib/openzeppelin-contracts/contracts/"
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/"
 ]
 
 [rpc_endpoints]
