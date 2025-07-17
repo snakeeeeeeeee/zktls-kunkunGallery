@@ -48,7 +48,7 @@ export const monadTestnet = defineChain({
 })
 
 export const DEFAULT_CONFIG: Config = {
-  CONTRACT_ADDRESS: "0xDF83C72DbCAb0c53fc88060eF435CAEB2758cF6d",
+  CONTRACT_ADDRESS: "0x23d1B56Cf3898BE9BcFA56C91E7d20b26a9cD8B7",
 
   NETWORK: {
     name: "Monad Testnet",
