@@ -96,7 +96,31 @@ export async function claimKunkunNFT(
         signatures: attestation.signatures || []
       };
 
-      tx = await contract.claimNFT(formattedAttestation, nftId);
+      // 先检查是否已经领取过
+      const hasClaimed = await contract.hasClaimed(walletAddress);
+      if (hasClaimed) {
+        throw new Error('您已经领取过NFT了');
+      }
+
+      // 手动设置gas限制来解决估算问题
+      const gasLimit = 300000; // 手动设置gas限制
+
+      try {
+        // 先尝试估算gas
+        const estimatedGas = await contract.estimateGas.claimNFT(formattedAttestation, nftId);
+        console.log('估算的gas:', estimatedGas.toString());
+        
+        tx = await contract.claimNFT(formattedAttestation, nftId, {
+          gasLimit: estimatedGas.mul(120).div(100) // 增加20%的gas buffer
+        });
+      } catch (estimateError) {
+        console.warn('Gas估算失败，使用手动gas限制:', estimateError);
+        
+        // 如果估算失败，使用手动gas限制
+        tx = await contract.claimNFT(formattedAttestation, nftId, {
+          gasLimit: gasLimit
+        });
+      }
     }
     message.destroy();
     message.loading('交易已发送，等待区块链确认...', 0);
