@@ -73,28 +73,6 @@ export async function claimKunkunNFT(
       // 使用验证数据领取
       console.log('使用验证数据领取NFT');
 
-      // 确保 attestation 结构符合合约要求
-      const formattedAttestation = {
-        recipient: attestation.recipient || walletAddress,
-        request: attestation.request || {
-          url: "",
-          header: "",
-          method: "GET",
-          body: ""
-        },
-        reponseResolve: attestation.reponseResolve || [],
-        data: attestation.data || "",
-        attConditions: attestation.attConditions || "",
-        // 修复时间戳：确保是秒级时间戳，且符合 uint64 范围
-        timestamp: attestation.timestamp 
-          ? (attestation.timestamp > 1000000000000 
-              ? Math.floor(attestation.timestamp / 1000) 
-              : attestation.timestamp)
-          : Math.floor(Date.now() / 1000),
-        additionParams: attestation.additionParams || "",
-        attestors: attestation.attestors || [],
-        signatures: attestation.signatures || []
-      };
 
       // 先检查是否已经领取过
       const hasClaimed = await contract.hasClaimed(walletAddress);
@@ -107,17 +85,17 @@ export async function claimKunkunNFT(
 
       try {
         // 先尝试估算gas
-        const estimatedGas = await contract.estimateGas.claimNFT(formattedAttestation, nftId);
+        const estimatedGas = await contract.estimateGas.claimNFT(attestation, nftId);
         console.log('估算的gas:', estimatedGas.toString());
         
-        tx = await contract.claimNFT(formattedAttestation, nftId, {
+        tx = await contract.claimNFT(attestation, nftId, {
           gasLimit: estimatedGas.mul(120).div(100) // 增加20%的gas buffer
         });
       } catch (estimateError) {
         console.warn('Gas估算失败，使用手动gas限制:', estimateError);
         
         // 如果估算失败，使用手动gas限制
-        tx = await contract.claimNFT(formattedAttestation, nftId, {
+        tx = await contract.claimNFT(attestation, nftId, {
           gasLimit: gasLimit
         });
       }

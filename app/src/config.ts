@@ -4,7 +4,7 @@ import { defineChain } from 'viem'
 export interface Config {
   // 合约配置
   CONTRACT_ADDRESS: string;
-  
+
   // 网络配置 
   NETWORK: {
     name: string;
@@ -12,7 +12,7 @@ export interface Config {
     rpcUrl: string;
     blockExplorer: string;
   };
-  
+
   // NFT 配置
   NFT: {
     maxId: number;
@@ -48,15 +48,15 @@ export const monadTestnet = defineChain({
 })
 
 export const DEFAULT_CONFIG: Config = {
-  CONTRACT_ADDRESS: "0xCEE1BDe6EbF42750d7FE784d538Bff6FC91C69Ee",
-  
+  CONTRACT_ADDRESS: "0xDF83C72DbCAb0c53fc88060eF435CAEB2758cF6d",
+
   NETWORK: {
     name: "Monad Testnet",
     chainId: 10143,
     rpcUrl: "https://testnet-rpc.monad.xyz",
     blockExplorer: "https://testnet.monadexplorer.com"
   },
-  
+
   NFT: {
     maxId: 8,
     totalSupply: 1000
@@ -66,9 +66,9 @@ export const DEFAULT_CONFIG: Config = {
 // 获取当前配置
 export function getConfig(): Config {
   // 这里可以从环境变量或本地存储读取配置
-  const customContractAddress = import.meta.env.VITE_CONTRACT_ADDRESS || 
-                               localStorage.getItem('contract_address');
-  
+  const customContractAddress = import.meta.env.VITE_CONTRACT_ADDRESS ||
+    localStorage.getItem('contract_address');
+
   return {
     ...DEFAULT_CONFIG,
     CONTRACT_ADDRESS: customContractAddress || DEFAULT_CONFIG.CONTRACT_ADDRESS
@@ -99,7 +99,7 @@ export async function switchToMonadTestnet(): Promise<boolean> {
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: `0x${DEFAULT_CONFIG.NETWORK.chainId.toString(16)}` }], // 10143 转为十六进制
     });
-    
+
     console.log('✅ 已切换到 Monad 测试网');
     return true;
   } catch (switchError: any) {
@@ -122,7 +122,7 @@ export async function switchToMonadTestnet(): Promise<boolean> {
             },
           ],
         });
-        
+
         console.log('✅ 已添加并切换到 Monad 测试网');
         return true;
       } catch (addError) {
@@ -130,7 +130,7 @@ export async function switchToMonadTestnet(): Promise<boolean> {
         return false;
       }
     }
-    
+
     console.error('切换到 Monad 测试网失败:', switchError);
     return false;
   }
