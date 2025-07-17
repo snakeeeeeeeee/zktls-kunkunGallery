@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Layout, Modal, Button, App } from 'antd';
 import { TrophyOutlined } from '@ant-design/icons';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
@@ -33,29 +33,55 @@ const queryClient = new QueryClient({
 function MainPageContent() {
   const [lotteryVisible, setLotteryVisible] = useState(false);
   const account = useAccount();
+  const { switchChain } = useSwitchChain();
   const { message } = App.useApp();
 
   // 监听钱包连接状态，自动切换网络
   useEffect(() => {
     const handleWalletConnection = async () => {
-      if (account?.status === 'connected') {
-        console.log('钱包已连接，开始切换到 Monad 测试网...');
+      if (account?.status === 'connected' && account.chainId !== 10143) {
+        console.log('钱包已连接，当前网络:', account.chainId, '需要切换到 Monad 测试网...');
+        
+        // 显示友好的提示信息
+        message.info('检测到您当前不在 Monad 测试网，正在为您切换网络...', 3);
+        
         try {
-          const switched = await switchToMonadTestnet();
-          if (switched) {
-            message.success('已切换到 Monad 测试网');
-          } else {
-            message.warning('请手动切换到 Monad 测试网');
+          await switchChain({ chainId: 10143 });
+          message.success('✅ 已成功切换到 Monad 测试网');
+        } catch (error: any) {
+          console.error('RainbowKit 网络切换失败:', error);
+          
+          // 如果用户拒绝了切换请求
+          if (error?.code === 4001 || error?.message?.includes('User rejected')) {
+            message.warning('⚠️ 您取消了网络切换，请手动切换到 Monad 测试网以使用完整功能');
+            return;
           }
-        } catch (error) {
-          console.error('网络切换失败:', error);
-          message.error('网络切换失败，请手动切换到 Monad 测试网');
+          
+          // 尝试使用传统方法作为备选
+          try {
+            console.log('尝试使用传统方法切换网络...');
+            const switched = await switchToMonadTestnet();
+            if (switched) {
+              message.success('✅ 已成功切换到 Monad 测试网');
+            } else {
+              message.warning('⚠️ 自动切换失败，请手动切换到 Monad 测试网');
+            }
+          } catch (fallbackError) {
+            console.error('备用网络切换也失败:', fallbackError);
+            message.error('❌ 网络切换失败，请手动在钱包中切换到 Monad 测试网');
+          }
         }
+      } else if (account?.status === 'connected' && account.chainId === 10143) {
+        console.log('✅ 已在 Monad 测试网');
+        message.success('✅ 当前已连接到 Monad 测试网', 2);
       }
     };
 
-    handleWalletConnection();
-  }, [account?.status]);
+    // 只在钱包状态变化时执行，避免重复执行
+    if (account?.status === 'connected') {
+      handleWalletConnection();
+    }
+  }, [account?.status, account?.chainId, switchChain, message]);
 
   // 使用useCallback避免重复渲染
   const handleLotteryClick = useCallback(() => {
