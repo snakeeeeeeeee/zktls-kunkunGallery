@@ -244,11 +244,73 @@
   },
   {
     "type": "function",
+    "name": "getContractStatus",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "totalClaimed_",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "totalSupply_",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "remainingSupply",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxNftId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getRemainingSupply",
     "inputs": [],
     "outputs": [
       {
         "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getUserClaimStatus",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "claimed",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "tokenIds",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "nftIds",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "totalOwnedCount",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -300,6 +362,25 @@
   },
   {
     "type": "function",
+    "name": "hasUserClaimed",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "isApprovedForAll",
     "inputs": [
       {
@@ -311,6 +392,25 @@
         "name": "operator",
         "type": "address",
         "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isScreenNameUsed",
+    "inputs": [
+      {
+        "name": "screenName",
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "outputs": [

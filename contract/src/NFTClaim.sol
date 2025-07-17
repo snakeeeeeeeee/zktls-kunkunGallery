@@ -118,6 +118,78 @@ contract NFTClaim is ERC721, Ownable {
         return TOTAL_SUPPLY - totalClaimed;
     }
 
+    /**
+     * @dev 检查用户是否已经领取过NFT
+     * @param user 用户地址
+     * @return claimed 是否已领取
+     */
+    function hasUserClaimed(address user) external view returns (bool) {
+        return hasClaimed[user];
+    }
+
+    /**
+     * @dev 检查用户名是否已被使用
+     * @param screenName 用户名
+     * @return used 是否已被使用
+     */
+    function isScreenNameUsed(string calldata screenName) external view returns (bool) {
+        return usedScreenNames[screenName];
+    }
+
+    /**
+     * @dev 获取用户的完整领取状态信息
+     * @param user 用户地址
+     * @return claimed 是否已领取
+     * @return tokenIds 用户拥有的tokenId数组
+     * @return nftIds 用户拥有的nftId数组
+     * @return totalOwnedCount 总共拥有的NFT数量
+     */
+    function getUserClaimStatus(address user) external view returns (
+        bool claimed,
+        uint256[] memory tokenIds,
+        uint256[] memory nftIds,
+        uint256 totalOwnedCount
+    ) {
+        claimed = hasClaimed[user];
+        totalOwnedCount = balanceOf(user);
+        
+        if (totalOwnedCount > 0) {
+            tokenIds = new uint256[](totalOwnedCount);
+            nftIds = new uint256[](totalOwnedCount);
+            
+            uint256 currentIndex = 0;
+            for (uint256 i = 0; i < totalClaimed; i++) {
+                if (ownerOf(i) == user) {
+                    tokenIds[currentIndex] = i;
+                    nftIds[currentIndex] = tokenIdToNftId[i];
+                    currentIndex++;
+                }
+            }
+        } else {
+            tokenIds = new uint256[](0);
+            nftIds = new uint256[](0);
+        }
+    }
+
+    /**
+     * @dev 获取合约的总体状态信息
+     * @return totalClaimed_ 已领取总数
+     * @return totalSupply_ 总供应量
+     * @return remainingSupply 剩余供应量
+     * @return maxNftId 最大NFT ID
+     */
+    function getContractStatus() external view returns (
+        uint256 totalClaimed_,
+        uint256 totalSupply_,
+        uint256 remainingSupply,
+        uint256 maxNftId
+    ) {
+        totalClaimed_ = totalClaimed;
+        totalSupply_ = TOTAL_SUPPLY;
+        remainingSupply = TOTAL_SUPPLY - totalClaimed;
+        maxNftId = MAX_NFT_ID;
+    }
+
     function getUserTokens(address user) external view returns (uint256[] memory tokenIds, uint256[] memory nftIds) {
         uint256 balance = balanceOf(user);
         tokenIds = new uint256[](balance);

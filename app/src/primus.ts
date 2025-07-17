@@ -1,6 +1,7 @@
 import {PrimusZKTLS} from "@primuslabs/zktls-js-sdk";
 import { claimKunkunNFT } from "./claim";
 import { message } from "antd";
+import { waitForWallet } from "./utils/walletDetection";
 
 // Initialize parameters.
 const primusZKTLS = new PrimusZKTLS();
@@ -93,10 +94,16 @@ export async function primusProof(
                 onVerifySuccess(attestation);
             }
 
-            // 检查是否有以太坊钱包环境
-            if (typeof window !== 'undefined' && window.ethereum) {
+            // 等待钱包加载完成
+            console.log('正在检测钱包环境...');
+            message.loading('正在检测钱包环境...', 0);
+            
+            const walletDetection = await waitForWallet(5000);
+            message.destroy();
+            
+            if (walletDetection.isAvailable) {
                 try {
-                    console.log('开始自动领取 NFT...');
+                    console.log(`检测到 ${walletDetection.walletType} 钱包，开始自动领取 NFT...`);
                     message.loading('正在自动领取 KUNKUN NFT...', 0);
                     
                     // 自动调用 claimKunkunNFT，使用传入的钱包地址
@@ -130,7 +137,7 @@ export async function primusProof(
                     }
                 }
             } else {
-                const error = new Error('未检测到以太坊钱包，请安装 MetaMask 或 OKX 钱包');
+                const error = new Error('未检测到以太坊钱包，请安装 MetaMask 或 OKX 钱包后刷新页面');
                 console.error(error.message);
                 message.error(error.message);
                 if (onError) {
