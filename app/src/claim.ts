@@ -198,6 +198,7 @@ export async function claimKunkunNFT(
     } 
     // 合约 require 错误处理
     else if (parsedError.includes('All NFTs have been claimed')) {
+
       errorMessage = '❌ 所有NFT已被领取完毕';
     } else if (parsedError.includes('Invalid NFT ID')) {
       errorMessage = '❌ 无效的NFT ID，请选择有效的NFT';
