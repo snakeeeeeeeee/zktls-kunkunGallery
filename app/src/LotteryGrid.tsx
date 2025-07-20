@@ -237,7 +237,7 @@ const LotteryGrid: React.FC = () => {
                   alt="抽奖" 
                   className="lottery-button-icon"
                 />
-                开始抽奖
+                开始
               </>
             )}
           </Button>

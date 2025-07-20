@@ -127,7 +127,7 @@ function MainPageContent() {
         <div className="floating-lottery-group">
           {/* 动态提示语 */}
           <div className="lottery-tooltip">
-            <span className="tooltip-text">🎰 开启专属 KUNKUN 盲盒</span>
+            <span className="tooltip-text">🎰 点击认领你的KUNKUN</span>
             <div className="tooltip-arrow"></div>
           </div>
 
@@ -156,7 +156,7 @@ function MainPageContent() {
                 alt="转盘"
                 style={{ width: '20px', height: '20px', marginRight: 8, borderRadius: '50%' }}
               />
-              KUNKUN 盲盒抽取
+              KUNKUN大转盘
             </div>
           }
           open={lotteryVisible}
