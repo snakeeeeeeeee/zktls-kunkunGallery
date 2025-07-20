@@ -270,6 +270,122 @@
   }
 }
 
+/* 左右背景填充样式 */
+.side-backgrounds {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.left-background,
+.right-background {
+  position: absolute;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  opacity: 0.3;
+  overflow: hidden;
+}
+
+.left-background {
+  left: 0;
+}
+
+.right-background {
+  right: 0;
+  transform: scaleX(-1); /* 水平翻转右侧背景 */
+}
+
+.background-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: backgroundFloat 8s infinite ease-in-out;
+}
+
+/* 背景浮动动画 */
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.5;
+  }
+}
+
+/* 弹跳转盘特效样式 */
+.bouncing-turntables {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.bouncing-ball {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  border-radius: 50%;
+  transition: transform 0.05s linear;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.bouncing-turntable-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+/* 鼠标悬停时稍微增加透明度 */
+.bouncing-ball:hover .bouncing-turntable-gif {
+  opacity: 0.9;
+}
+
+/* 添加一些随机的发光效果 */
+.bouncing-ball:nth-child(2n) {
+  filter: drop-shadow(0 4px 8px rgba(24, 144, 255, 0.3));
+}
+
+.bouncing-ball:nth-child(3n) {
+  filter: drop-shadow(0 4px 8px rgba(114, 46, 209, 0.3));
+}
+
+.bouncing-ball:nth-child(5n) {
+  filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.3));
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .bouncing-ball {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  
+  .bouncing-turntable-gif {
+    opacity: 0.5 !important;
+  }
+  
+  .left-background,
+  .right-background {
+    width: 15%;
+    opacity: 0.2;
+  }
+}
+
 @media (max-width: 576px) {
   .logo .anticon {
     font-size: 20px;
@@ -289,5 +405,228 @@
     max-width: 120px;
     white-space: normal;
     text-align: center;
+  }
+  
+  .bouncing-ball {
+    width: 25px !important;
+    height: 25px !important;
+  }
+  
+  .bouncing-turntable-gif {
+    opacity: 0.4 !important;
+  }
+}
+
+/* 游戏规则区域样式 */
+.game-rules-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.rules-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.rules-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.rules-title {
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 16px;
+  animation: titleGlow 3s infinite ease-in-out;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(24, 144, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(114, 46, 209, 0.5));
+  }
+}
+
+.rules-subtitle {
+  font-size: 18px;
+  color: #666;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.rules-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(24, 144, 255, 0.1);
+}
+
+.rule-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(24, 144, 255, 0.15);
+  border-color: rgba(24, 144, 255, 0.3);
+}
+
+.rule-icon {
+  font-size: 32px;
+  min-width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1890ff, #722ed1);
+  border-radius: 12px;
+  animation: iconFloat 2s infinite ease-in-out;
+}
+
+.rule-item:nth-child(2n) .rule-icon {
+  animation-delay: 0.5s;
+}
+
+.rule-item:nth-child(3n) .rule-icon {
+  animation-delay: 1s;
+}
+
+.rule-item:nth-child(4n) .rule-icon {
+  animation-delay: 1.5s;
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.rule-text h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.rule-text p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.rules-footer {
+  text-align: center;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(24, 144, 255, 0.1), rgba(114, 46, 209, 0.1));
+  border-radius: 12px;
+  border: 1px solid rgba(24, 144, 255, 0.2);
+}
+
+.footer-text {
+  font-size: 16px;
+  color: #1890ff;
+  margin: 0;
+  font-weight: 500;
+}
+
+.footer-text strong {
+  color: #722ed1;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .game-rules-section {
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+  
+  .rules-container {
+    padding: 24px;
+    border-radius: 16px;
+  }
+  
+  .rules-title {
+    font-size: 24px;
+  }
+  
+  .rules-subtitle {
+    font-size: 16px;
+  }
+  
+  .rules-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .rule-item {
+    padding: 20px;
+  }
+  
+  .rule-icon {
+    font-size: 24px;
+    min-width: 40px;
+    height: 40px;
+  }
+  
+  .rule-text h3 {
+    font-size: 18px;
+  }
+  
+  .rule-text p {
+    font-size: 13px;
+  }
+  
+  .footer-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .rules-container {
+    padding: 20px;
+  }
+  
+  .rules-title {
+    font-size: 20px;
+  }
+  
+  .rules-subtitle {
+    font-size: 14px;
+  }
+  
+  .rule-item {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+  }
+  
+  .rule-icon {
+    align-self: center;
   }
 }
