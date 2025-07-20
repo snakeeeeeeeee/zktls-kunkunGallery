@@ -233,7 +233,7 @@ function MainPageContent() {
           <div className="rules-container">
             <div className="rules-header">
               <h2 className="rules-title">🎮 欢迎来到 KUNKUN 的世界！</h2>
-              <p className="rules-subtitle">这里是KUNKUN的小黑子聚集地，如果你也是IKUN，就来认领你的KUNKUN NFT吧！</p>
+              <p className="rules-subtitle">这里是KUNKUN的聚集地，如果你也是IKUN，就来认领你的KUNKUN NFT吧！</p>
             </div>
             
             <div className="rules-content">
